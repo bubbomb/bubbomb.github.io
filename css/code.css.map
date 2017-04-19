@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAKA,IAAK;EACJ,WAAW,EAAE,SAAS;EACtB,SAAS,ECDC,IAAI;EDEd,YAAY,EAAE,IAAI;EAClB,aAAa,EAAE,IAAI;EACnB,SAAS,EAAE,KAAK;EAChB,SAAS,EAAE,KAAK;EAChB,oCAA4C;IAP7C,IAAK;MAQH,KAAK,EAAE,KAAK;EAEb,oCAA2C;IAV5C,IAAK;MAWH,KAAK,EAAE,IAAI;MACX,SAAS,EAAE,IAAI;MACf,SAAS,EAAE,IAAI",
-"sources": ["../scss/code.scss","../scss/_imports/_variables.scss"],
-"names": [],
-"file": "code.css"
-}
