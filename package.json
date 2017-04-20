@@ -2,6 +2,7 @@
   "name": "pinochlePalMobile",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://bubbomb.github.io/",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
@@ -26,4 +27,5 @@
   "jest": {
     "preset": "react-native"
   }
+
 }
