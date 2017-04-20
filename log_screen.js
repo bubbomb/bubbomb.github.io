@@ -9,6 +9,7 @@ import {
   Dimensions,
   ListView,
   TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native'
 
 let styles = require('./styles');
@@ -21,13 +22,49 @@ export default class LogScreen extends Component {
 	    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 	    this.state = {
 	      dataSource: ds.cloneWithRows(this.props.rounds),
+	      activeRowID: null,
 	    };
    	};
 
   render() {
 
   	const _renderRow = (rowData: string, sectionID: number, rowID: number) =>{
+  		console.log(rowID, this.state.activeRowID)
+  		if(rowID === this.state.activeRowID){
+  			return (
+		    	<TouchableHighlight onPress={(e, something)=> onPress(e,{rowID})}>
+					<View style={styles.data_row_big}>
+							<View style ={styles.delete_button}>
+								<Button 
+									style = {styles.data_text} 
+									onPress= {() => deleteRound(rowID)}
+									color = 'red'
+									title="Delete"
 
+								/>
+							</View>
+							
+							<Text style={(rowData.runningTotal1 > 0) ? [styles.data_text] : [styles.data_text, styles.data_negative]}>
+								{rowData.runningTotal1}
+								{"\n"}M: {rowData.meld1}
+								{"\n"}T: {rowData.trick1}
+							</Text>
+							<Text style={(rowData.t1Score > 0) ? [styles.data_text] : [styles.data_text, styles.data_negative]}>{rowData.t1Score}</Text>
+							<Text style={(rowData.runningTotal2 > 0) ? [styles.data_text] : [styles.data_text, styles.data_negative]}>
+								{rowData.runningTotal2}
+								{"\n"}M: {rowData.meld2}
+								{"\n"}T: {rowData.trick2}
+							</Text>
+							<Text style={(rowData.t2Score > 0) ? [styles.data_text] : [styles.data_text, styles.data_negative]}>{rowData.t2Score}</Text>
+					
+						
+				
+							
+					</View>
+				</TouchableHighlight>
+		      
+		    );
+  		}
 	    return (
 	    	<TouchableHighlight onPress={(e, something)=> onPress(e,{rowID})}>
 				<View style={styles.data_row}>
@@ -55,9 +92,11 @@ export default class LogScreen extends Component {
 	  }
 
 	const onPress = (e, row) =>{
-		
+		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-		if(true){
+		this.setState({activeRowID:row.rowID, dataSource:ds.cloneWithRows(this.props.rounds)})
+
+		if(false){
 
 			deleteRound(row.rowID)
 		}

@@ -86,6 +86,12 @@ module.exports = StyleSheet.create({
 	    height:30,
 
 	},
+	data_row_big:{
+		flexDirection: 'row',
+	    justifyContent: 'center',
+	    height:65,
+
+	},
 	data_text:{
 		alignSelf:'center',
 		flex:1,
@@ -108,5 +114,15 @@ module.exports = StyleSheet.create({
 		textAlign:'center',
 		alignSelf:'center',
 		flex:1
+	},
+	delete_button:{
+
+		alignSelf:'center',
+		backgroundColor:'red',
+		borderRadius:6,
+		flex:1,
+		
+
+
 	},
 })
