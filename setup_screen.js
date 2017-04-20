@@ -34,12 +34,14 @@ export default class SetupScreen extends Component {
         
         <View>
             {/*<Banner/>*/}
-            <PlayerNumSwitch change_players= {(players) => this.setState({players:players})}/>
+            <View style={styles.middler_container}>
+                <PlayerNumSwitch change_players= {(players) => this.setState({players:players})}/>
+            </View>
             <TeamNames change_names={(names) => this.change_names(names)}/>
             <Button
-                accessibilityLabel="Change Screen"
+                accessibilityLabel="Start game button"
                 title="Start"
-                onPress= {(e, state) => this.props.set_game_state({
+                onPress= {() => this.props.set_game_state({
                                                     players: this.state.players, 
                                                     team1Name: this.state.team1Name, 
                                                     team2Name: this.state.team2Name, 
@@ -81,8 +83,8 @@ class PlayerNumSwitch extends Component {
     return (
       <View>
         <View>
-            <View style={styles.row}>
-                <Text>
+            <View style = {(!this.state.four_player) ?  styles.input_container: styles.selected_input_container}>
+                <Text style = {styles.input_label}>
                     Four Players
                 </Text>
                 <Switch
@@ -94,8 +96,8 @@ class PlayerNumSwitch extends Component {
                   value={this.state.four_player}
                 />
             </View>
-            <View style={styles.row}>
-                <Text>
+            <View style = {(this.state.four_player) ?  styles.input_container: styles.selected_input_container}>
+                <Text style = {styles.input_label}>
                     Six Players
                 </Text>
                 <Switch
@@ -132,17 +134,23 @@ class TeamNames extends Component {
     render() {
 
         return(
-            <View style={styles.container}>
-                <Text> Select Team Names </Text>
+            <View style={styles.input_container}>
+                <Text style = {styles.input_label}> Select Team Names </Text>
                 <TextInput
+                    style = {styles.text_input}
                     accessibilityLabel='Team 1 name input'
                     placeholder= {`Team 1`}
                     onChangeText = {(value) => this.update_names({team1Name:value})}
+                    autoCapitalize = 'words'
+                    maxLength = {8}
                 />
                 <TextInput
+                    style = {styles.text_input}
                     accessibilityLabel='Team 2 name input'
                     placeholder= {`Team 2`} 
                     onChangeText = {(value) => this.update_names({team2Name: value})}
+                    autoCapitalize = 'words'
+                    maxLength = {8}
                 />
             </View>
 

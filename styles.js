@@ -1,7 +1,11 @@
 import {
   StyleSheet,
+  Dimensions,
+  Platform,
   
 } from 'react-native'
+
+const window = Dimensions.get('window');
 
 module.exports = StyleSheet.create({
 
@@ -19,13 +23,34 @@ module.exports = StyleSheet.create({
 	center:{
 		alignSelf:'center',
 	},
-	flexStart:{
-		alignSelf:'flex-start',
-	},
-	flexEnd:{
-		alignSelf:'flex-end',
+
+	middler_container:{
+
+		marginRight:window.width/6,
+		marginLeft:window.width/6,
+
 	},
 
+	input_container:{
+		flexDirection:'row',
+		padding:window.height/60,
+		
+
+	},
+	input_label:{
+		flex:2,
+		alignSelf:'flex-start',
+	 	marginTop:'auto',
+
+	},
+
+	text_input: {
+	   	flex:1,
+	    alignItems: 'flex-end',
+	    marginRight: 10,
+		width:window.width/10,
+
+  	},
 
 	selected: {
 
@@ -36,80 +61,52 @@ module.exports = StyleSheet.create({
 		backgroundColor:'#d3d3d3',
 	},
 
+	selected_input_container:{
 
-	withShadow: {
-	flex:1,
-    borderRadius: 3,
-    shadowColor: "#d3d3d3",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-	      height: 4,
-	      width: -4
-    	}
+		borderWidth:3,
+		borderRadius:16,
+		borderColor:'#d3d3d3',
+		backgroundColor:'#d3d3d3',
+		flexDirection:'row',
+		padding:window.height/60,
+		
+	},
+	error_message:{
+		color:'red',
+		alignSelf:'center'
+	},
+	tabs:{
+		flexDirection:'row',
+		alignItems:'center',
+
+	},
+	data_row:{
+		flexDirection: 'row',
+	    justifyContent: 'center',
+	    height:30,
+
+	},
+	data_text:{
+		alignSelf:'center',
+		flex:1,
+		textAlign:'center',
+
+	},
+	data_negative:{
+		backgroundColor:'#ff5722',
+		borderRadius:30,
 	},
 
+	data_header:{
+		flexDirection: 'row',
+	    justifyContent: 'center',
+		backgroundColor:'#9e9e9e',
+		height:30,
+	},
 
-	page: {
-    paddingBottom: 300,
-  },
-  default_textInput: {
-    height: 26,
-    borderWidth: 0.5,
-    borderColor: '#0f0f0f',
-    flex: 1,
-    fontSize: 13,
-    padding: 4,
-  },
-  multiline: {
-    borderWidth: 0.5,
-    borderColor: '#0f0f0f',
-    flex: 1,
-    fontSize: 13,
-    height: 50,
-    padding: 4,
-    marginBottom: 4,
-  },
-  multilineWithFontStyles: {
-    color: 'blue',
-    fontWeight: 'bold',
-    fontSize: 18,
-    fontFamily: 'Cochin',
-    height: 60,
-  },
-  multilineChild: {
-    width: 50,
-    height: 40,
-    position: 'absolute',
-    right: 5,
-    backgroundColor: 'red',
-  },
-  eventLabel: {
-    margin: 3,
-    fontSize: 12,
-  },
-  labelContainer: {
-    flexDirection: 'row',
-    marginVertical:6,
-    flex: 1,
-  },
-  label: {
-    width: 115,
-    alignItems: 'flex-end',
-    marginRight: 10,
-    paddingTop: 2,
-  },
-  rewriteContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  remainder: {
-    textAlign: 'right',
-    width: 24,
-  },
-  hashtag: {
-    color: 'blue',
-    fontWeight: 'bold',
-  },
-
+	data_head:{
+		textAlign:'center',
+		alignSelf:'center',
+		flex:1
+	},
 })

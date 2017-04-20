@@ -11,7 +11,7 @@ import {
 
 let styles = require('./styles');
 // const Dimensions = require('Dimensions');
-//const window = Dimensions.get('window');
+const window = Dimensions.get('window');
 
 export default class ScoreScreen extends Component {
 
@@ -33,6 +33,7 @@ export default class ScoreScreen extends Component {
       trick2: 0,
       startingBid: startingBid,
       totalTricks:totalTricks,
+      bidErrorMessage: "",
     }
     };
 
@@ -40,12 +41,32 @@ export default class ScoreScreen extends Component {
   render() {
 
     const submit = () => {
+
+      if(parseInt(this.state.bidAmount) < this.state.startingBid){
+
+
+        this.setState({bidAmount: this.state.startingBid , bidErrorMessage: "Please enter a bid amount equal to or greater than " + this.state.startingBid.toString()})
+        return
+      }
+      else{
+        this.setState({bidErrorMessage:""})
+
+      }
       
       let score1 = 0;
       let score2 = 0;
 
       score1 = parseInt(score1) + parseInt(this.state.meld1) + parseInt(this.state.trick1)
       score2 = parseInt(score2) + parseInt(this.state.meld2) + parseInt(this.state.trick2)
+
+      if(parseInt(this.state.trick1) === 0){
+
+        score1 = 0
+      }
+
+      if(parseInt(this.state.trick2) === 0){
+        score2 = 0
+      }
 
       if(this.state.bidTeam2){
 
@@ -62,11 +83,32 @@ export default class ScoreScreen extends Component {
 
         }
       }
-
+      let roundScore1 = parseInt(score1)
+      let roundScore2 = parseInt(score2)
       score1 = parseInt(score1) + parseInt(this.props.score1)
       score2 = parseInt(score2) + parseInt(this.props.score2)
 
       this.props.set_game_state({score1:score1, score2:score2})
+      
+      let rounds = this.props.rounds
+      console.log(rounds)
+      let newRound = {
+
+          bidAmount:this.state.bidAmount,
+          bidTeam: "BID TEAM",
+          t1Score: roundScore1,
+          t2Score: roundScore2,
+          meld1: this.state.meld1,
+          meld2: this.state.meld2,
+          trick1: this.state.trick1,
+          trick2: this.state.trick2,
+          runningTotal1: score1,
+          runningTotal2: score2,
+
+      }
+      rounds.push(newRound)
+
+      this.props.set_game_state({rounds:rounds})
 
     };
 
@@ -79,7 +121,6 @@ export default class ScoreScreen extends Component {
       }
       let otherTricks = parseInt(this.state.totalTricks) - parseInt(tricks)
 
-      console.log(this.state.totalTricks)
       if(teamNum === 1){
         this.setState({trick1:tricks, trick2:otherTricks})
       }
@@ -88,6 +129,16 @@ export default class ScoreScreen extends Component {
         this.setState({trick1:otherTricks, trick2:tricks})
       }
 
+    };
+    const update_bid = (bid) => {
+
+      bid = parseInt(bid)
+      console.log(bid)
+      // if(bid < this.state.startingBid){
+
+      //   bid = this.state.startingBid
+      // }
+      this.setState({bidAmount: bid})
     };
 
     return (
@@ -115,32 +166,58 @@ export default class ScoreScreen extends Component {
         /*<Tricks/>*/
 
       /*<Submit Button/>*/
+
+
+
+        /*<GameTabs/
+            tabNames=["Game", "Scores"]
+        // <Button
+        //   accessibilityLabel="Submit button"
+        //   onPress={this.props.set_game_state({screen:"LogScreen"})}
+        //   title="Logs"
+        // />
+        >*/
       }
-
-
-
+        <View style = {styles.tabs}>
+          <Button
+                accessibilityLabel="Back button"
+                title="Back"
+                onPress= {() => this.props.set_game_state({screen: "SetupScreen"})}
+          />
+          <Button
+              accessibilityLabel="Back button"
+              title="Logs"
+              onPress= {() => this.props.set_game_state({screen: "LogScreen"})}
+          />
+        </View>
         <View style = {styles.row}>
           <TeamNameScore teamName = {this.props.team1Name} teamScore = {this.props.score1} selected = {this.state.bidTeam2}/>
           <TeamNameScore teamName = {this.props.team2Name} teamScore = {this.props.score2} selected = {!this.state.bidTeam2}/>
         </View>
+        <Text style = {styles.error_message}>{this.state.bidErrorMessage}</Text>
         <View style = {styles.row}>
+
           <BidInfo
-            update_bid_team = {(value) => this.setState({bidTeam2: value})}
-            update_bid = {(value) => this.setState({bidAmount: value})}
-            bidTeam1 = {this.state.bidTeam2}
-            bidAmount = {this.state.bidAmount}
+            update_bid_team = {(value) => this.setState({bidTeam2:value})}
+            update_bid = {(value) => {update_bid(value)}}
+            bidTeam2 = {this.state.bidTeam2}
+            bid_value = {(this.state.bidAmount.toString() === "NaN") ? "" : this.state.bidAmount.toString()}
+            teamName = {(this.state.bidTeam2) ? this.props.team2Name : this.props.team1Name}
+
           />
         </View>
 
         <View style = {styles.row}>
           <MeldsTricks 
             trick_value = {(this.state.trick1.toString() === "NaN") ? "" : this.state.trick1.toString()} 
+            meld_value = {(this.state.meld1.toString() === "NaN") ? "" : this.state.meld1.toString()} 
             teamName = {this.props.team1Name}  
             update_meld = {(value) => this.setState({meld1: value})} 
             update_trick = {(value) => {update_tricks(1, value)}}
           />
           <MeldsTricks 
             trick_value = {(this.state.trick2.toString() === "NaN") ? "" : this.state.trick2.toString()} 
+            meld_value = {(this.state.meld2.toString() === "NaN") ? "" : this.state.meld2.toString()} 
             teamName = {this.props.team2Name}  
             update_meld = {(value) => this.setState({meld2: value})} 
             update_trick = {(value) => {update_tricks(2, value)}}
@@ -197,16 +274,19 @@ class BidInfo extends Component {
         <Switch
           style = {{alignSelf:'center'}}
           onValueChange={(value) => this.props.update_bid_team(value)}
-          value ={this.props.bidTeam1}
+          value ={this.props.bidTeam2}
         />
-       
-        <TextInput
-            style = {styles.label}
-            accessibilityLabel='Bid Input'
-            placeholder= {`Bid Amount`}
-            onChangeText = {(value) => this.props.update_bid(value)}
-            keyboardType = 'numeric'
-        />
+       <View style = {{flexDirection:'row'}}>
+          <Text style = {styles.input_label}>{this.props.teamName} Bid: </Text>
+          <TextInput
+              style = {styles.text_input}
+              accessibilityLabel='Bid Input'
+              placeholder= {`Bid Amount`}
+              onChangeText = {(value) => this.props.update_bid(value)}
+              keyboardType = 'numeric'
+              value = {this.props.bid_value}
+          />
+        </View>
         
       </View>
     )
@@ -227,23 +307,32 @@ constructor(props) {
     let tricks = teamName + " Tricks"
 
     return (
-      <View style={{flex:1, flexDirection:'column', alignItems:'center'}}>
+      <View style={{flex:1, flexDirection:'column', alignItems:'center', margin:15}}>
+        <View style = {styles.input_container}>
+          <Text style = {styles.input_label}>{this.props.teamName} Meld: </Text>
+          <TextInput
+              style = {styles.text_input}
+              accessibilityLabel='Meld input'
+              placeholder= {meld}
+              onChangeText = {(value) => this.props.update_meld(value)}
+              keyboardType = 'numeric'
+              value = {this.props.meld_value}
+          />
+        </View>
+        <View style = {styles.input_container}>
 
-        <TextInput
-            style = {styles.label}
-            accessibilityLabel='Meld input'
-            placeholder= {meld}
-            onChangeText = {(value) => this.props.update_meld(value)}
-            keyboardType = 'numeric'
-        />
-        <TextInput
-            style = {styles.label}
-            accessibilityLabel='Trick input'
-            placeholder= {tricks}
-            onChangeText = {(value) => this.props.update_trick(value)}
-            keyboardType = 'numeric'
-            value = {this.props.trick_value}
-        />
+          <Text style = {styles.input_label}>{this.props.teamName} Tricks: </Text>
+
+
+          <TextInput
+              style = {styles.text_input}
+              accessibilityLabel='Trick input'
+              placeholder= {tricks}
+              onChangeText = {(value) => this.props.update_trick(value)}
+              keyboardType = 'numeric'
+              value = {this.props.trick_value}
+          />
+        </View>
       </View>
     )
   }
